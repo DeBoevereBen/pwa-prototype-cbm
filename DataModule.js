@@ -1,19 +1,16 @@
 export const DataModule = (function() {
   // const API_BASE = "https://hhot.cbm.org/apiv2/";
-  // const API_TASKCARD_ROOT = API_BASE + "en/taskcards/";
-  // const API_TASKCARD_DETAIL = API_BASE + "en/taskcards/";
-  const API_BASE = "data/";
-  const API_TASKCARD_ROOT = API_BASE + "taskcards.json";
-  const API_TASKCARD_DETAIL = API_BASE + "taskcards/";
-  // REMOVE THE .json EXTENSIONS IN PRODUCTION!!!
+  const API_BASE = "https://cbmtje.herokuapp.com/apiv2/";
+  const API_TASKCARD_ROOT = API_BASE + "en/taskcards/";
 
   const DBKey = "CBM";
 
   const FetchConf = {
     method: `GET`,
+    mode: "cors",
     headers: {
-      "Content-Type": `application/json`,
-      "Access-Control-Allow-Origin": `*`
+      "Accept": "application/json",
+      "Content-Type": `application/json`
     }
   };
 
@@ -27,6 +24,7 @@ export const DataModule = (function() {
   };
 
   DataModule.prototype.fetch = async function(url) {
+    console.log("Fetching the network");
     const result = await fetch(url, FetchConf);
     try {
       return await result.json();
@@ -47,7 +45,7 @@ export const DataModule = (function() {
         this.saveTopicsWithCards(cardsByTopic);
         return cardsByTopic;
       }
-    } catch (e) {
+    } catch (err) {
       console.error(err);
     }
   };
@@ -137,7 +135,7 @@ export const DataModule = (function() {
   DataModule.prototype.getCardDetailNetworkFirst = async function(cardSlug) { 
     try {
       try {
-        const cardDetailFromNetwork = await this.fetch(`${API_TASKCARD_DETAIL}${cardSlug}.json`);
+        const cardDetailFromNetwork = await this.fetch(`${API_TASKCARD_ROOT}${cardSlug}`);
         const cardDetailFromCache = await getCardDetailFromCache.call(this, cardSlug);
 
         if (cardDetailFromCache.changed !== cardDetailFromNetwork.changed) {
@@ -223,7 +221,7 @@ export const DataModule = (function() {
 
       if (newOrUpdated) {
         // save this card
-        const detail = await this.fetch(`${API_TASKCARD_DETAIL}${card}.json`);
+        const detail = await this.fetch(`${API_TASKCARD_ROOT}${card}`);
         await this.saveCardDetail(detail, card);
       } // else skip this card
 
