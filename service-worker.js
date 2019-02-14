@@ -1,5 +1,5 @@
 // The name of the cache group.
-const CACHE = "v3";
+const CACHE = "v4";
 let FALLBACK = "";
 let NOTFOUND = "";
 // The path needs to be where the projects resides in.
