@@ -1,0 +1,63 @@
+[
+    {
+      "title": "Shelter ",
+      "nid": "1",
+      "path": "/task-card/shelter",
+      "slug": "shelter",
+      "changed": "1550069238",
+      "field_tags": [
+        "shelter",
+        "camp coordination and management",
+        "WASH"
+      ]
+    },
+    {
+      "title": "Ramp",
+      "nid": "4",
+      "path": "/task-card/ramp",
+      "slug": "ramp",
+      "changed": "1536228598",
+      "field_tags": [
+        "shelter",
+        "camp coordination and management",
+        "logistics",
+        "WASH"
+      ]
+    },
+    {
+      "title": "Distribution",
+      "nid": "5",
+      "path": "/task-card/distribution",
+      "slug": "distribution",
+      "changed": "1538585768",
+      "field_tags": [
+        "food security",
+        "logistics",
+        "camp coordination and management",
+        "nutrition"
+      ]
+    },
+    {
+      "title": "Building access",
+      "nid": "7",
+      "path": "/task-card/building-access",
+      "slug": "building-access",
+      "changed": "1538563573",
+      "field_tags": [
+        "shelter",
+        "logistics",
+        "food security"
+      ]
+    },
+    {
+      "title": "Latrine",
+      "nid": "8",
+      "path": "/task-card/latrine",
+      "slug": "latrine",
+      "changed": "1547810851",
+      "field_tags": [
+        "WASH",
+        "shelter"
+      ]
+    }
+]

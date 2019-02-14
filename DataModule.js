@@ -1,6 +1,11 @@
 export const DataModule = (function() {
-  const API_BASE = "https://hhot.cbm.org/apiv2/";
-  const API_TASKCARD_ROOT = API_BASE + "en/taskcards/";
+  // const API_BASE = "https://hhot.cbm.org/apiv2/";
+  // const API_TASKCARD_ROOT = API_BASE + "en/taskcards/";
+  // const API_TASKCARD_DETAIL = API_BASE + "en/taskcards/";
+  const API_BASE = "data/";
+  const API_TASKCARD_ROOT = API_BASE + "taskcards.json";
+  const API_TASKCARD_DETAIL = API_BASE + "taskcards/";
+  // REMOVE THE .json EXTENSIONS IN PRODUCTION!!!
 
   const DBKey = "CBM";
 
@@ -132,7 +137,7 @@ export const DataModule = (function() {
   DataModule.prototype.getCardDetailNetworkFirst = async function(cardSlug) { 
     try {
       try {
-        const cardDetailFromNetwork = await this.fetch(`${API_TASKCARD_ROOT}${cardSlug}`);
+        const cardDetailFromNetwork = await this.fetch(`${API_TASKCARD_DETAIL}${cardSlug}.json`);
         const cardDetailFromCache = await getCardDetailFromCache.call(this, cardSlug);
 
         if (cardDetailFromCache.changed !== cardDetailFromNetwork.changed) {
@@ -218,7 +223,7 @@ export const DataModule = (function() {
 
       if (newOrUpdated) {
         // save this card
-        const detail = await this.fetch(`${API_TASKCARD_ROOT}${card}`);
+        const detail = await this.fetch(`${API_TASKCARD_DETAIL}${card}.json`);
         await this.saveCardDetail(detail, card);
       } // else skip this card
 

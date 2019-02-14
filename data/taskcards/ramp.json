@@ -1,0 +1,156 @@
+{
+    "translations": {
+        "en": "ramp",
+        "es": "rampas"
+    },
+    "content": [
+        {
+            "type": "image",
+            "value": "https://hhot.cbm.org/sites/default/files/public/2016-09/Ramp.png",
+            "alt": "Chart of different gradients of a ramp and the difficulties of a person uisng a wheelchair to use independently the ramp when it is more than 5% gradient",
+            "width": "863",
+            "height": "237",
+            "field_credit": "© CBM 2015"
+        },
+        {
+            "type": "html",
+            "value": "<p>Building a ramp, to overcome barriers such as stairs or steep entrances to buildings, WASH facilities and or other services,&nbsp;does not necessary need excessive investment but a good preparation and planning.</p>\r\n\r\n<p>A ramp is required if there is&nbsp;a difference between ground level inside and outside the facility in order&nbsp;to make the&nbsp;<a href=\"/task-card/entrance\">entrance</a> accessible (pictures below shows examples of different types of ramps depending on context and construction).</p>\r\n\r\n<ul>\r\n\t<li>The recommended gradient for a ramp is 1:20 (5%). The length of the ramp thus should not be less than 10 metres if the gradient is 1:20;</li>\r\n\t<li>If technically unavoidable, the gradient may be increased to a maximum of 8% (1:12). The length of the ramp should not be less than 2 metres if the gradient is 1:12;</li>\r\n\t<li>Landing areas shall be&nbsp;provided at the top and the bottom of the ramp with a minimum floor space of 150 cm x 150 cm.&nbsp;</li>\r\n\t<li><a href=\"/task-card/handrail\">Handrails</a> are&nbsp;provided on both sides of the ramp at 70 cm and 90 cm from the ramp level;</li>\r\n\t<li>The width of the ramp should be at least 90 cm for a private shelter and 150 cm for collective centres or public spaces;</li>\r\n\t<li>Wheel&nbsp;guards or crutch stops&nbsp;are equally&nbsp;useful for persons with visual impairments or those using crutches. Located on the edges of the ramp, they help to guide the person. Build with a small piece of lumber (1.5 cm max), which is&nbsp;screwed to the ramp.&nbsp;</li>\r\n</ul>\r\n"
+        },
+        {
+            "type": "image",
+            "value": "https://hhot.cbm.org/sites/default/files/public/2016-05/Capture%20du%202016-05-02%2011-18-10.png",
+            "alt": "Ramp with high curb acting as wheel guards or crutch stops",
+            "width": "428",
+            "height": "280",
+            "field_credit": "© ADA National Network. 2015"
+        },
+        {
+            "type": "image",
+            "value": "https://hhot.cbm.org/sites/default/files/public/2016-03/Ramp%202.%20Different%20type%20of%20ramps%20%28CBM%202015%29.jpg",
+            "alt": "Sketch of four types of ramps to access a shelter. Two ramps are running parallel to the shelter, one running in opposite direction and one is a switch-back ramp",
+            "width": "497",
+            "height": "114",
+            "field_credit": "© CBM 2015"
+        },
+        {
+            "type": "image",
+            "value": "https://hhot.cbm.org/sites/default/files/public/2016-04/Ramp%20type3.png",
+            "alt": "Drawing shows a parallel ramp, indicating width (1500-2500mm), gradient (1:20) and landing space length 1500mm) \"A straight ramp might be appropirate where there is a lot of space and/or the ramp is going up a small rise\" ",
+            "width": "528",
+            "height": "394",
+            "field_credit": "© Handicap International. 2009"
+        },
+        {
+            "type": "image",
+            "value": "https://hhot.cbm.org/sites/default/files/public/2016-04/Ramp%20type1.png",
+            "alt": "A 3 directions ramp leading up to a house. Width (1500-2500mm), ramp gradient 1:15, landing space (length/width 1500-2500mm). Handrails on both sides. \"A ramp that changes direction to accommodate space around the building\"",
+            "width": "535",
+            "height": "386",
+            "field_credit": "© Handicap International. 2009"
+        }
+    ],
+    "field_sources": [
+        {
+            "type": "link",
+            "uri": "http://www.cbm.org/article/downloads/54741/16-minimum-requirements-for-building-accessible-shelters.pdf",
+            "title": "CBM. Inclusive post-disaster reconstruction: Building back safe and accessible for all. 2015."
+        },
+        {
+            "type": "link",
+            "uri": "http://humanitarianlibrary.org/sites/default/files/2014/01/Emergencies_Creating_Barrier_Free_Emergency_Shelters.pdf",
+            "title": "Handicap International. Guidelines for Creating Barrier-Free Emergency Shelters. Handicap international Nepal Programme. 2009."
+        },
+        {
+            "type": "link",
+            "uri": "https://adata.org/sites/adata.org/files/files/EventPlanningGuide_Final_2015.pdf",
+            "title": "ADA National Network. (2015). A Planning Guide for Making Temporary Events Accessible to People with Disabilities [booklet]."
+        }
+    ],
+    "field_body_text": "Chart of different gradients of a ramp and the difficulties of a person uisng a wheelchair to use independently the ramp when it is more than 5% gradient Building a ramp, to overcome barriers such as stairs or steep entrances to buildings, WASH facilities and or other services,&nbsp;does not necessary need excessive investment but a good preparation and planning.A ramp is required if there is&nbsp;a difference between ground level inside and outside the facility in order&nbsp;to make the&nbsp;entrance accessible (pictures below shows examples of different types of ramps depending on context and construction).The recommended gradient for a ramp is 1:20 (5%). The length of the ramp thus should not be less than 10 metres if the gradient is 1:20;If technically unavoidable, the gradient may be increased to a maximum of 8% (1:12). The length of the ramp should not be less than 2 metres if the gradient is 1:12;Landing areas shall be&nbsp;provided at the top and the bottom of the ramp with a minimum floor space of 150 cm x 150 cm Handrails are&nbsp;provided on both sides of the ramp at 70 cm and 90 cm from the ramp level;The width of the ramp should be at least 90 cm for a private shelter and 150 cm for collective centres or public spaces;Wheel&nbsp;guards or crutch stops&nbsp;are equally&nbsp;useful for persons with visual impairments or those using crutches. Located on the edges of the ramp, they help to guide the person. Build with a small piece of lumber (1.5 cm max), which is&nbsp;screwed to the ramp  Ramp with high curb acting as wheel guards or crutch stops Sketch of four types of ramps to access a shelter. Two ramps are running parallel to the shelter, one running in opposite direction and one is a switch-back ramp Drawing shows a parallel ramp, indicating width (1500-2500mm), gradient (1:20) and landing space length 1500mm) \"A straight ramp might be appropirate where there is a lot of space and/or the ramp is going up a small rise\"  A 3 directions ramp leading up to a house. Width (1500-2500mm), ramp gradient 1:15, landing space (length/width 1500-2500mm). Handrails on both sides. \"A ramp that changes direction to accommodate space around the building\" CBM. Inclusive post-disaster reconstruction: Building back safe and accessible for all. 2015. Handicap International. Guidelines for Creating Barrier-Free Emergency Shelters. Handicap international Nepal Programme. 2009. ADA National Network. (2015). A Planning Guide for Making Temporary Events Accessible to People with Disabilities [booklet].",
+    "title": "Ramp",
+    "nid": "4",
+    "path": "/task-card/ramp",
+    "changed": "1536228598",
+    "field_tags": [
+        "shelter",
+        "camp coordination and management",
+        "logistics",
+        "WASH"
+    ],
+    "relatedCards": [
+        {
+            "title": "Washroom",
+            "nid": "12",
+            "path": "/task-card/washroom",
+            "slug": "washroom",
+            "changed": "1538725884",
+            "field_tags": [
+                "WASH",
+                "shelter",
+                "camp coordination and management"
+            ]
+        },
+        {
+            "title": "Universal Design",
+            "nid": "37",
+            "path": "/task-card/universal-design",
+            "slug": "universal-design",
+            "changed": "1548347347",
+            "field_tags": [
+                "shelter",
+                "camp coordination and management",
+                "WASH",
+                "logistics",
+                "nutrition",
+                "food security"
+            ]
+        },
+        {
+            "title": "Shelter ",
+            "nid": "1",
+            "path": "/task-card/shelter",
+            "slug": "shelter",
+            "changed": "1550069238",
+            "field_tags": [
+                "shelter",
+                "camp coordination and management",
+                "WASH"
+            ]
+        },
+        {
+            "title": "Latrine",
+            "nid": "8",
+            "path": "/task-card/latrine",
+            "slug": "latrine",
+            "changed": "1547810851",
+            "field_tags": [
+                "WASH",
+                "shelter"
+            ]
+        },
+        {
+            "title": "Collective centers",
+            "nid": "26",
+            "path": "/task-card/collective-centers",
+            "slug": "collective-centers",
+            "changed": "1536228321",
+            "field_tags": [
+                "shelter",
+                "logistics",
+                "camp coordination and management"
+            ]
+        },
+        {
+            "title": "Building access",
+            "nid": "7",
+            "path": "/task-card/building-access",
+            "slug": "building-access",
+            "changed": "1538563573",
+            "field_tags": [
+                "shelter",
+                "logistics",
+                "food security"
+            ]
+        }
+    ]
+}

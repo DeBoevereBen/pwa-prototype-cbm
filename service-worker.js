@@ -127,6 +127,9 @@ function useFallback() {
 function updateCache(request) {
   return caches.open(CACHE).then(staticCache => {
     return fetch(request).then(response => {
+      if (request.url.indexOf("data") > -1) {
+        return response;
+      }
       if (response.status !== 404) {
         return staticCache.put(request, response.clone()).then(_ => {
           return response;
