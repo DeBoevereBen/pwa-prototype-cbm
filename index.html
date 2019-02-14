@@ -1,0 +1,62 @@
+<!--    <small>Built with a tutorial at: https://itnext.io/pwa-from-scratch-guide-yet-another-one-bdfa438b50aa</small><br><br>-->
+<!--Author: Matt Buckland-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <!-- Built from https://tomitm.github.io/appmanifest/ -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="CBM PWA">
+    <meta name="apple-mobile-web-app-title" content="CBM PWA">
+    <meta name="theme-color" content="#D3022C">
+    <meta name="msapplication-navbutton-color" content="#D3022C">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-starturl" content="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" sizes="192x192" href="loading.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="loading.png">
+    <!-- End of content built from https://tomitm.github.io/appmanifest/ -->
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CBM // Task card index</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" media="all">
+</head>
+<body>
+
+    <h1>CBM PWA</h1>
+
+    <div style="width: 49%; display: inline-block; vertical-align: top;">
+        <div>
+            <label for="topicSelect">Topics</label>
+            <select id="topicSelect"></select>
+            <label for="cardSelect">Cards</label>
+            <select id="cardSelect"></select>
+        </div>
+
+        <h2>History</h2>
+        <div id="history">
+
+        </div>
+    </div>
+
+    <div style="width: 49%;  display: inline-block;">
+
+        <div id="taskcard_details">
+
+        </div>
+
+    </div>
+
+    <!-- https://github.com/jakearchibald/idb -->
+    <script type="module" src="./idb.js"></script>
+    <!--  -->
+    <script type="module" src="./DataModule.js"></script>
+    <script type="module" src="./script.js"></script>
+    <script type="text/javascript" src="./service-worker.js"></script>
+</body>
+</html>

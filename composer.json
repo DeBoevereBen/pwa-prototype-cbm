@@ -1,0 +1,10 @@
+{
+    "name": "studio24/cbm-pwa",
+	"description": "CBM - PWA prototype",
+    "type": "project",
+    "require": {
+        "php": ">=7.1",
+        "roave/security-advisories": "dev-master"
+    }
+}
+
