@@ -96,7 +96,7 @@ function fromNetwork(request){
     return response;
   })
   .catch(err => {
-    return caches.match(`${BASE_PATH}offline.html`);
+    
   });
 }
 
