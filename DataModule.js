@@ -37,7 +37,7 @@ export const DataModule = (function() {
     try {
       return await result.json();
     } catch (err) {
-      console.error("Something went wrong in the fetchHelper", err);
+      // console.error("Something went wrong in the fetchHelper", err);
       return null;
     }
   };
@@ -53,7 +53,7 @@ export const DataModule = (function() {
         return cardsByTopic;
       }
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   };
 
@@ -75,7 +75,7 @@ export const DataModule = (function() {
         return newTopicObj;
       })
       .catch(err => {
-        console.error(err);
+        // // console.error(err);
         throw new Error("Something went wrong...");
       });
   };
@@ -136,12 +136,12 @@ export const DataModule = (function() {
       !cardDetailFromCache ||
       cardDetailFromCache.changed !== cardDetailFromNetwork.changed
     ) {
-      console.log("Card changed, updating cache...");
+      // console.log("Card changed, updating cache...");
       await this.saveCardDetail(cardDetailFromNetwork, slug);
-      console.log("Notifying user");
+      // console.log("Notifying user");
       this.DOM.showReloadButton();
     } else {
-      console.log("No change found, go on browsing");
+      // console.log("No change found, go on browsing");
     }
   }
 
@@ -161,7 +161,7 @@ export const DataModule = (function() {
 
       return cardDetailFromCache;
     } catch (e) {
-      console.log("Fetching from network because:", e);
+      // console.log("Fetching from network because:", e);
       return await this.fetch(`${API_TASKCARD_ROOT}${cardSlug}`);
     }
   };
@@ -217,7 +217,7 @@ export const DataModule = (function() {
         return card ? false : true;
       })
       .catch(err => {
-        console.log("No internet?", err);
+        // console.log("No internet?", err);
       });
   }
 
@@ -229,7 +229,7 @@ export const DataModule = (function() {
       this.saveTopicsWithCards(cardsByTopic);
       cards = cards.map(x => x.slug);
     } catch (err) {
-      console.log("No internet?", err);
+      // console.log("No internet?", err);
       return;
     }
 

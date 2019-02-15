@@ -80,7 +80,7 @@ import { DOMModule } from "./DOMModule.js";
 
     window.isUpdateAvailable.then(isAvailable => {
       if (isAvailable) {
-        console.log("update available");
+        // console.log("update available");
         // alert("new update available, refresh to view newest content.");
       }
     });
