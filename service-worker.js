@@ -94,6 +94,9 @@ self.addEventListener("fetch", function(event) {
 function fromNetwork(request){
   return fetch(request).then(response => {
     return response;
+  })
+  .catch(err => {
+    return caches.match(`${BASE_PATH}offline.html`);
   });
 }
 
