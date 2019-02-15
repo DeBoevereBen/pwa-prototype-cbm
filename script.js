@@ -1,110 +1,51 @@
 import { DataModule } from "./DataModule.js";
+import { DOMModule } from "./DOMModule.js";
 
 (function() {
-  const SWversion = "1";
+  const DBVersion = 6;
 
-  const DB = new DataModule(1);
-
-  const API_BASE = "https://hhot.cbm.org/apiv2/";
-  const API_TASKCARD_ROOT = API_BASE + "en/taskcards/";
-
-  const CONFIG = {
-    method: `GET`,
-    headers: {
-      "Content-Type": `application/json`,
-      "Access-Control-Allow-Origin": `*`
-    }
-  };
+  const DOM = new DOMModule();
+  const DB = new DataModule(DBVersion, DOM);
 
   async function displayCards() {
     let cardsByTopic = await DB.getTopicsWithCards();
+    DOM.updateTopicSelect(cardsByTopic);
 
-    const topicSelect = document.getElementById("topicSelect");
-
-    Object.keys(cardsByTopic).forEach(topic => {
-      const topicOption = document.createElement("option");
-      topicOption.value = topic;
-      topicOption.text = topic;
-      topicSelect.appendChild(topicOption);
-    });
-    onSelectChange();
+    await onSelectChange(cardsByTopic);
   }
 
-  async function onSelectChange() {
-    let cardsByTopic = await DB.getTopicsWithCards();
-
-    const cardSelect = document.getElementById("cardSelect");
-    cardSelect.innerHTML = "";
-    const topic = document.getElementById("topicSelect").value;
-
-    cardsByTopic[topic].forEach(card => {
-      const topicOption = document.createElement("option");
-      topicOption.value = card.slug;
-      topicOption.text = card.title;
-      cardSelect.appendChild(topicOption);
-    });
-    showCardsInfo();
-  }
-
-  async function getCardDetails(card_slug) {
-    let details = null;
-
-    if (details === null) {
-      details = await DB.fetch(`${API_TASKCARD_ROOT}${card_slug}/`);
-    } else {
-      details = JSON.parse(details);
-    }
-
-    return details;
-  }
-
-  function getCardHtml(taskcard) {
-    let content = `<h1>${taskcard.title}</h1><br>`;
-    taskcard.content.forEach(function(contentBlock) {
-      if (contentBlock.type == "image") {
-        content = content + `<img src="${contentBlock.value}">`;
-      } else {
-        content = content + contentBlock.value;
-      }
-    });
-    return content;
-  }
-
-  async function showCardFromHistory(slug) {
-    const cardDetails = await DB.getCardDetailNetworkFirst(slug);
-    updateCardDetailHtml(cardDetails);
+  async function onSelectChange(cardsByTopic) {
+    if (!cardsByTopic) cardsByTopic = await DB.getTopicsWithCards();
+    DOM.updateCardSelect(cardsByTopic);
+    await showCardsDetail();
   }
 
   async function updateHistory(slug, title) {
     await DB.saveHistory(slug, title);
     let historyList = await DB.getHistory();
-    const historyElement = document.getElementById("history");
-    historyElement.innerHTML = "";
-
-    historyList.forEach(history => {
-      const p = document.createElement("p");
-      p.addEventListener("click", e => {
-        showCardFromHistory(history.slug);
-      });
-      p.innerHTML = `<a href="#">${history.title}</a>`;
-      historyElement.prepend(p);
-    });
+    DOM.updateHistory(historyList, showCardDetailFromHistory);
   }
 
-  function updateCardDetailHtml(cardDetails) {
-    const taskcardDetails = document.getElementById("taskcard_details");
-    taskcardDetails.innerHTML = getCardHtml(cardDetails);
+  async function showCardDetailFromHistory(slug) {
+    const cardDetails = await DB.getCardDetail(slug);
+    DOM.updateCardDetails(cardDetails);
   }
 
-  async function showCardsInfo() {
-    const slug = document.getElementById("cardSelect").value;
-    let cardDetails = await DB.getCardDetailNetworkFirst(slug);
-    updateCardDetailHtml(cardDetails);
-    updateHistory(slug, cardDetails.title);
+  async function showCardsDetail(isRefresh) {
+    const slug = DOM.getSelectedCard();
+    let cardDetails = await DB.getCardDetail(slug, isRefresh);
+    DOM.updateCardDetails(cardDetails);
+    if (!isRefresh) updateHistory(slug, cardDetails.title);
+  }
+
+  async function refreshCardDetail() {
+    await showCardsDetail(true);
+    DOM.hideReloadButton();
   }
 
   (function registerServiceWorker() {
     window.isUpdateAvailable = new Promise(function(resolve, reject) {
+      let refreshing;
       // lazy way of disabling service workers while developing
       if ("serviceWorker" in navigator) {
         // register service worker file
@@ -129,24 +70,32 @@ import { DataModule } from "./DataModule.js";
             };
           })
           .catch(err => console.error("[SW ERROR]", err));
+          navigator.serviceWorker.addEventListener("controllerchange", _ => {
+            if (refreshing) return;
+            window.location.reload();
+            refreshing = true;
+          })
       }
     });
 
     window.isUpdateAvailable.then(isAvailable => {
       if (isAvailable) {
-        alert("new update available, refresh to view newest content.");
+        console.log("update available");
+        // alert("new update available, refresh to view newest content.");
       }
     });
   })();
 
-  document.addEventListener("DOMContentLoaded", async function() {
-    console.log("Ready");
+  document.addEventListener("DOMContentLoaded", function() {
     document
       .getElementById("cardSelect")
-      .addEventListener("change", async e => await showCardsInfo());
+      .addEventListener("input", async e => await showCardsDetail());
     document
       .getElementById("topicSelect")
-      .addEventListener("change", async e => await onSelectChange());
+      .addEventListener("input", async e => await onSelectChange());
+    document
+      .getElementById("reload")
+      .addEventListener("click", async e => await refreshCardDetail());
     displayCards();
     DB.checkForNewCardsAndSave();
   });

@@ -38,6 +38,10 @@
             <select id="cardSelect"></select>
         </div>
 
+        <button id="reload" style="display: none;" >
+            Reload for newest data
+        </button>
+
         <h2>History</h2>
         <div id="history">
 
@@ -55,6 +59,7 @@
     <!-- https://github.com/jakearchibald/idb -->
     <script type="module" src="./idb.js"></script>
     <!--  -->
+    <script type="module" src="./DOMModule.js"></script>
     <script type="module" src="./DataModule.js"></script>
     <script type="module" src="./script.js"></script>
     <script type="text/javascript" src="./service-worker.js"></script>

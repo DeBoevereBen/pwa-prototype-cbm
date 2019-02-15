@@ -1,7 +1,14 @@
 // The name of the cache group.
-const CACHE = "v4";
+const CACHE = `v3.3.7`;
 let FALLBACK = "";
 let NOTFOUND = "";
+const OFFLINE_IMG = `<svg role="img" aria-labelledby="offline-title" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+<title id="offline-title">Offline</title>
+<path fill="rgba(145,145,145,0.5)" d="M0 0h400v225H0z" />
+<text fill="rgba(0,0,0,0.33)" font-family="Helvetica Neue,Arial,sans-serif" font-size="27" text-anchor="middle" x="200" y="113" dominant-baseline="central">
+Offline, image not cached yet.
+</text>
+</svg>`
 // The path needs to be where the projects resides in.
 const BASE_PATH = "";
 
@@ -24,6 +31,7 @@ let filesToCache = [
  */
 this.addEventListener("install", installEvent => {
   console.log("[ServiceWorker] installing");
+  self.skipWaiting();
   installEvent.waitUntil(
     caches
       .open(CACHE)
@@ -31,7 +39,7 @@ this.addEventListener("install", installEvent => {
         return staticCache.addAll(filesToCache);
       })
       .catch(error => {
-        console.log("Error opening cache in install", error);
+        console.error("Error opening cache in install", error);
       })
   );
 });
@@ -73,10 +81,21 @@ self.addEventListener("activate", event => {
  */
 self.addEventListener("fetch", function(event) {
   let request = event.request;
-  event.respondWith(this.fromCache(request));
-  // Update the cache with the new fetch requests
-  event.waitUntil(this.updateCache(request));
+  if (request.headers.get("Accept").includes("json")) {
+    // skip handling;
+    event.respondWith(this.fromNetwork(request));
+  } else {
+    event.respondWith(this.fromCache(request));
+    // Update the cache with the new fetch requests
+    event.waitUntil(this.updateCache(request));
+  }
 });
+
+function fromNetwork(request){
+  return fetch(request).then(response => {
+    return response;
+  });
+}
 
 /**
  * Getting the date from cache IF it isn't exist
@@ -92,13 +111,17 @@ function fromCache(request) {
       return fetch(request)
         .then(response => {
           if (response.status === 404) {
-            console.log("Page not found");
             return caches.match(`${BASE_PATH}404.html`);
           }
           return response;
         })
         .catch(error => {
           console.log("You might be offline", error);
+          console.log("Is this an image => ", request.url, " ---- ", request.url.match(/\.(jpe?g|png|gif|svg)$/i));
+          if (request.url.match(/\.(jpe?g|png|gif|svg)$/i)) {
+            console.log("Yes this is...");
+            return new Response(OFFLINE_IMG, {headers: {'Content-Type': 'image/svg+xml'}});
+          }
           return caches.match(`${BASE_PATH}offline.html`);
         });
     });

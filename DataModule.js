@@ -9,28 +9,35 @@ export const DataModule = (function() {
     method: `GET`,
     mode: "cors",
     headers: {
-      "Accept": "application/json",
+      Accept: "application/json",
       "Content-Type": `application/json`
     }
   };
 
-  const DataModule = function(version) {
+  const DataModule = function(version, domModule) {
+    this.DOM = domModule;
     this.version = version;
-    this.DB = idb.openDb(DBKey, this.version, upgradeDB => {
-      upgradeDB.createObjectStore("topics", { keyPath: "name" });
-      upgradeDB.createObjectStore("cardDetails", { keyPath: "slug" });
-      upgradeDB.createObjectStore("history", { keyPath: "time" });
-    });
+    this.DB = idb.openDb(DBKey, this.version, upgradeDBCallback);
   };
 
+  function upgradeDBCallback(upgradeDB) {
+    const storenames = [...upgradeDB.objectStoreNames];
+    if (storenames.length > 0) {
+      storenames.forEach(name => {
+        upgradeDB.deleteObjectStore(name);
+      });
+    }
+    upgradeDB.createObjectStore("topics", { keyPath: "name" });
+    upgradeDB.createObjectStore("cardDetails", { keyPath: "slug" });
+    upgradeDB.createObjectStore("history", { keyPath: "time" });
+  }
+
   DataModule.prototype.fetch = async function(url) {
-    console.log("Fetching the network");
     const result = await fetch(url, FetchConf);
     try {
       return await result.json();
     } catch (err) {
-      console.log("something went wrong in the fetchHelper");
-      console.error(err);
+      console.error("Something went wrong in the fetchHelper", err);
       return null;
     }
   };
@@ -68,7 +75,7 @@ export const DataModule = (function() {
         return newTopicObj;
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         throw new Error("Something went wrong...");
       });
   };
@@ -90,7 +97,6 @@ export const DataModule = (function() {
 
   DataModule.prototype.saveTopicsWithCards = async function(json) {
     const cards = [];
-    // console.log(json);
     Object.keys(json).forEach(key => {
       cards.push({
         name: key,
@@ -108,47 +114,55 @@ export const DataModule = (function() {
   };
 
   const getCardDetailFromCache = async function(slug) {
-    return await this.DB.then(db => {
+    const cardDetail = await this.DB.then(db => {
       return db
         .transaction("cardDetails")
         .objectStore("cardDetails")
         .get(slug);
-    })
-      .then(cardDetail => {
-        // console.log("cardDetail", cardDetail);
-        if (!cardDetail) {
-          throw new Error("Card not found in cache");
-        }
-        return cardDetail.details;
-      })
-      .catch(err => {
-        console.log(err);
-        throw new Error("Something went wrong...");
-      });
+    });
+    if (!cardDetail) {
+      throw new Error("Card not found in cache");
+    }
+    return cardDetail.details;
   };
 
-/**
- * Network first to ensure newest version of card.
- * Fallback to cache.
- */
+  async function updateCacheAndNotifyUser(slug) {
+    const cardDetailFromNetwork = await this.fetch(
+      `${API_TASKCARD_ROOT}${slug}`
+    );
 
-  DataModule.prototype.getCardDetailNetworkFirst = async function(cardSlug) { 
+    const cardDetailFromCache = await getCardDetailFromCache.call(this, slug);
+    if (
+      !cardDetailFromCache ||
+      cardDetailFromCache.changed !== cardDetailFromNetwork.changed
+    ) {
+      console.log("Card changed, updating cache...");
+      await this.saveCardDetail(cardDetailFromNetwork, slug);
+      console.log("Notifying user");
+      this.DOM.showReloadButton();
+    } else {
+      console.log("No change found, go on browsing");
+    }
+  }
+
+  /**
+   * Cache first for that snappy PWA experience.
+   * Get newest version from network if exists, update in cache, notify the user that he can update.
+   */
+  DataModule.prototype.getCardDetail = async function(cardSlug, isRefresh) {
     try {
-      try {
-        const cardDetailFromNetwork = await this.fetch(`${API_TASKCARD_ROOT}${cardSlug}`);
-        const cardDetailFromCache = await getCardDetailFromCache.call(this, cardSlug);
+      const cardDetailFromCache = await getCardDetailFromCache.call(
+        this,
+        cardSlug
+      );
+      if (!isRefresh) updateCacheAndNotifyUser.call(this, cardSlug);
 
-        if (cardDetailFromCache.changed !== cardDetailFromNetwork.changed) {
-          console.log("Card changed, updating cache...");
-          this.saveCardDetail(cardDetailFromNetwork, cardSlug);
-        }
+      if (!cardDetailFromCache) throw new Error("Card not found in cache");
 
-        return cardDetailFromNetwork;
-      } catch (e) {
-        return await getCardDetailFromCache.call(this, cardSlug);
-      }
+      return cardDetailFromCache;
     } catch (e) {
-      console.log(e);
+      console.log("Fetching from network because:", e);
+      return await this.fetch(`${API_TASKCARD_ROOT}${cardSlug}`);
     }
   };
 
@@ -198,18 +212,21 @@ export const DataModule = (function() {
         .transaction("cardDetails")
         .objectStore("cardDetails")
         .get(slug);
-    }).then(card => {
-      return card ? false : true;
     })
-    .catch(err => {
-      console.log("No internet?", err);
-    });
+      .then(card => {
+        return card ? false : true;
+      })
+      .catch(err => {
+        console.log("No internet?", err);
+      });
   }
 
   DataModule.prototype.checkForNewCardsAndSave = async function() {
     let cards = null;
     try {
       cards = await this.fetch(API_TASKCARD_ROOT);
+      const cardsByTopic = groupByTopic(cards);
+      this.saveTopicsWithCards(cardsByTopic);
       cards = cards.map(x => x.slug);
     } catch (err) {
       console.log("No internet?", err);
@@ -224,7 +241,6 @@ export const DataModule = (function() {
         const detail = await this.fetch(`${API_TASKCARD_ROOT}${card}`);
         await this.saveCardDetail(detail, card);
       } // else skip this card
-
     });
   };
 
