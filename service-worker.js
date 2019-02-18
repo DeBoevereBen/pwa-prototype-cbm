@@ -1,5 +1,5 @@
 // The name of the cache group.
-const CACHE = `v2.0`;
+const CACHE = `v3.0.4`;
 let FALLBACK = "";
 let NOTFOUND = "";
 const OFFLINE_IMG = `<svg role="img" aria-labelledby="offline-title" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
@@ -30,7 +30,7 @@ let filesToCache = [
  * Here we can precache our static files we want to cache.
  */
 this.addEventListener("install", installEvent => {
-  // console.log("[ServiceWorker] installing");
+  console.log("[ServiceWorker] installing");
   self.skipWaiting();
   installEvent.waitUntil(
     caches
@@ -50,7 +50,7 @@ this.addEventListener("install", installEvent => {
  * the service-worker.
  */
 self.addEventListener("activate", event => {
-  // console.log("[Serviceworker] Actived");
+  console.log("[Serviceworker] Actived");
   event.waitUntil(
     caches
       .keys()
@@ -58,14 +58,14 @@ self.addEventListener("activate", event => {
         return Promise.all(
           cacheNames.map(function(cacheName) {
             if (cacheName !== CACHE) {
-              // console.log("[ServiceWorker] Deleting old cache:", cacheName);
+              console.log("[ServiceWorker] Deleting old cache:", cacheName);
               return caches.delete(cacheName);
             }
           })
         );
       })
       .then(function() {
-        // console.log("[ServiceWorker] Claiming clients for version", CACHE);
+        console.log("[ServiceWorker] Claiming clients for version", CACHE);
         return self.clients.claim();
       })
   );
@@ -94,10 +94,9 @@ self.addEventListener("fetch", function(event) {
 function fromNetwork(request){
   return fetch(request).then(response => {
     return response;
-  })
-  .catch(err => {
+  }).catch(err => {
     
-  });
+  })
 }
 
 /**
@@ -120,7 +119,7 @@ function fromCache(request) {
         })
         .catch(error => {
           if (request.url.match(/\.(jpe?g|png|gif|svg)$/i)) {
-            return new Response(OFFLINE_IMG, {headers: {'Content-Type': 'image/svg+xml'}});
+            return new Response(OFFLINE_IMG, {headers: {'Content-Type': 'image/svg+xml', 'Cache-Control': 'no-cache'}});
           }
           return caches.match(`${BASE_PATH}offline.html`);
         });

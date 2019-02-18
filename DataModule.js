@@ -24,12 +24,17 @@ export const DataModule = (function() {
     const storenames = [...upgradeDB.objectStoreNames];
     if (storenames.length > 0) {
       storenames.forEach(name => {
-        upgradeDB.deleteObjectStore(name);
+        // don't remove favourites, otherwise user will lose it's favourites
+        if (name !== "favourites") upgradeDB.deleteObjectStore(name);
       });
     }
     upgradeDB.createObjectStore("topics", { keyPath: "name" });
     upgradeDB.createObjectStore("cardDetails", { keyPath: "slug" });
-    upgradeDB.createObjectStore("history", { keyPath: "time" });
+    try {
+      upgradeDB.createObjectStore("favourites", { keyPath: "slug" });
+    } catch (e) {
+      // don't create, already exists
+    }
   }
 
   DataModule.prototype.fetch = async function(url) {
@@ -75,7 +80,7 @@ export const DataModule = (function() {
         return newTopicObj;
       })
       .catch(err => {
-        // // console.error(err);
+        // console.error(err);
         throw new Error("Something went wrong...");
       });
   };
@@ -136,9 +141,7 @@ export const DataModule = (function() {
       !cardDetailFromCache ||
       cardDetailFromCache.changed !== cardDetailFromNetwork.changed
     ) {
-      // console.log("Card changed, updating cache...");
       await this.saveCardDetail(cardDetailFromNetwork, slug);
-      // console.log("Notifying user");
       this.DOM.showReloadButton();
     } else {
       // console.log("No change found, go on browsing");
@@ -159,9 +162,9 @@ export const DataModule = (function() {
 
       if (!cardDetailFromCache) throw new Error("Card not found in cache");
 
-      return cardDetailFromCache;
+      const isFavourite = await this.isFavourite(cardSlug);
+      return Object.assign({ isFavourite }, cardDetailFromCache);
     } catch (e) {
-      // console.log("Fetching from network because:", e);
       return await this.fetch(`${API_TASKCARD_ROOT}${cardSlug}`);
     }
   };
@@ -182,29 +185,6 @@ export const DataModule = (function() {
       await callback(array[index], index, array);
     }
   }
-
-  DataModule.prototype.getHistory = async function() {
-    return await this.DB.then(db => {
-      return db
-        .transaction("history")
-        .objectStore("history")
-        .getAll();
-    }).then(results => {
-      return results;
-    });
-  };
-
-  DataModule.prototype.saveHistory = async function(slug, title) {
-    this.DB.then(db => {
-      const tx = db.transaction("history", "readwrite");
-      tx.objectStore("history").put({
-        slug,
-        title,
-        time: Date.now()
-      });
-      return tx.complete;
-    });
-  };
 
   async function checkIfCardExists(slug) {
     return this.DB.then(db => {
@@ -242,6 +222,69 @@ export const DataModule = (function() {
         await this.saveCardDetail(detail, card);
       } // else skip this card
     });
+  };
+
+  DataModule.prototype.markFavourite = async function(slug) {
+    this.DB.then(db => {
+      const tx = db.transaction("favourites", "readwrite");
+      tx.objectStore("favourites").put({
+        slug
+      });
+      return tx.complete;
+    });
+  };
+
+  DataModule.prototype.isFavourite = async function(slug) {
+    return await this.DB.then(db => {
+      return db
+        .transaction("favourites")
+        .objectStore("favourites")
+        .get(slug);
+    }).then(result => {
+      return !!result;
+    });
+  };
+
+  DataModule.prototype.removeFavourite = async function(slug) {
+    await this.DB.then(db => {
+      return db
+        .transaction("favourites", "readwrite")
+        .objectStore("favourites")
+        .delete(slug);
+    });
+  };
+
+  DataModule.prototype.getFavouriteList = async function() {
+    return await this.DB.then(db => {
+      return db
+        .transaction("favourites")
+        .objectStore("favourites")
+        .getAll();
+    }).then(res => {
+      return res;
+    });
+  };
+
+  DataModule.prototype.cardsWithText = async function(inputText) {
+    const searchVal = inputText.toLowerCase().trim();
+    const listOfCards = {};
+
+    const db = await this.DB;
+    const allCardDetails = await db
+      .transaction("cardDetails")
+      .objectStore("cardDetails")
+      .getAll();
+
+    allCardDetails.forEach(card => {
+      if (
+        (card.slug && card.slug.toLowerCase().indexOf(searchVal) > -1) ||
+        (card.details.field_body_text && card.details.field_body_text.toLowerCase().indexOf(searchVal) > -1)
+      ) {
+        listOfCards[[card.slug]] = card.details.title;
+        // listOfCards.push({[[card.slug]]: card.details.title});
+      }
+    });
+    return listOfCards;
   };
 
   return DataModule;

@@ -2,7 +2,7 @@ import { DataModule } from "./DataModule.js";
 import { DOMModule } from "./DOMModule.js";
 
 (function() {
-  const DBVersion = 6;
+  const DBVersion = 7;
 
   const DOM = new DOMModule();
   const DB = new DataModule(DBVersion, DOM);
@@ -10,7 +10,8 @@ import { DOMModule } from "./DOMModule.js";
   async function displayCards() {
     let cardsByTopic = await DB.getTopicsWithCards();
     DOM.updateTopicSelect(cardsByTopic);
-
+    let favourites = await DB.getFavouriteList();
+    DOM.showFavouriteList(favourites, showCardDetailFromFavourites);
     await onSelectChange(cardsByTopic);
   }
 
@@ -20,27 +21,43 @@ import { DOMModule } from "./DOMModule.js";
     await showCardsDetail();
   }
 
-  async function updateHistory(slug, title) {
-    await DB.saveHistory(slug, title);
-    let historyList = await DB.getHistory();
-    DOM.updateHistory(historyList, showCardDetailFromHistory);
-  }
-
-  async function showCardDetailFromHistory(slug) {
-    const cardDetails = await DB.getCardDetail(slug);
-    DOM.updateCardDetails(cardDetails);
-  }
-
   async function showCardsDetail(isRefresh) {
     const slug = DOM.getSelectedCard();
     let cardDetails = await DB.getCardDetail(slug, isRefresh);
-    DOM.updateCardDetails(cardDetails);
-    if (!isRefresh) updateHistory(slug, cardDetails.title);
+    DOM.updateCardDetails(slug, cardDetails);
   }
 
   async function refreshCardDetail() {
     await showCardsDetail(true);
     DOM.hideReloadButton();
+  }
+
+  async function updateFavourite(event) {
+    if (event.target && event.target.matches("#favBtn")) {
+      const state = JSON.parse(event.target.dataset.state);
+      const slug = event.target.dataset.slug;
+      if (state) DB.removeFavourite(slug);
+      else DB.markFavourite(slug);
+      DOM.updateFavStar(state);
+    }
+    let favourites = await DB.getFavouriteList();
+    DOM.showFavouriteList(favourites, showCardDetailFromFavourites);
+  }
+
+  async function showCardDetailFromFavourites(slug) {
+    const cardDetails = await DB.getCardDetail(slug);
+    DOM.updateCardDetails(slug, cardDetails);
+  }
+
+  async function searchCards(e) {
+    const searchText = e.target.value;
+    const cards = await DB.cardsWithText(searchText);
+    DOM.updateFilteredCards(cards);
+  }
+
+  async function showCardFromSearch(e) {
+    const slug = e.target.value;
+    showCardDetailFromFavourites(slug);
   }
 
   (function registerServiceWorker() {
@@ -70,18 +87,11 @@ import { DOMModule } from "./DOMModule.js";
             };
           })
           .catch(err => console.error("[SW ERROR]", err));
-          navigator.serviceWorker.addEventListener("controllerchange", _ => {
-            if (refreshing) return;
-            window.location.reload();
-            refreshing = true;
-          })
-      }
-    });
-
-    window.isUpdateAvailable.then(isAvailable => {
-      if (isAvailable) {
-        // console.log("update available");
-        // alert("new update available, refresh to view newest content.");
+        navigator.serviceWorker.addEventListener("controllerchange", _ => {
+          if (refreshing) return;
+          window.location.reload();
+          refreshing = true;
+        });
       }
     });
   })();
@@ -96,6 +106,15 @@ import { DOMModule } from "./DOMModule.js";
     document
       .getElementById("reload")
       .addEventListener("click", async e => await refreshCardDetail());
+    document
+      .getElementById("taskcard_details")
+      .addEventListener("click", e => updateFavourite(e));
+    document
+      .getElementById("searchInput")
+      .addEventListener("change", e => searchCards(e));
+    document
+      .getElementById("filteredCards")
+      .addEventListener("input", e => showCardFromSearch(e));
     displayCards();
     DB.checkForNewCardsAndSave();
   });
