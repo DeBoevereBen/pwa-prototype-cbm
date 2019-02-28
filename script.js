@@ -2,7 +2,7 @@ import { DataModule } from "./DataModule.js";
 import { DOMModule } from "./DOMModule.js";
 
 (function() {
-  const DBVersion = 7;
+  const DBVersion = 8;
 
   const DOM = new DOMModule();
   const DB = new DataModule(DBVersion, DOM);

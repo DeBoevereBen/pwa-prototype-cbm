@@ -1,17 +1,18 @@
-export const DataModule = (function() {
-  // const API_BASE = "https://hhot.cbm.org/apiv2/";
+  export const DataModule = (function() {
   const API_BASE = "https://cbmtje.herokuapp.com/apiv2/";
   const API_TASKCARD_ROOT = API_BASE + "en/taskcards/";
 
   const DBKey = "CBM";
 
+  let headers = new Headers();
+
+  headers.set('Authorization', 'Basic ' + btoa("test" + ":" + "123"));
+  headers.set('Content-Type', 'application/json');
+  headers.set('Accept', 'application/json');
+
   const FetchConf = {
     method: `GET`,
-    mode: "cors",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": `application/json`
-    }
+    headers
   };
 
   const DataModule = function(version, domModule) {

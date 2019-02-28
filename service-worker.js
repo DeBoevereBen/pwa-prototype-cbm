@@ -1,5 +1,5 @@
 // The name of the cache group.
-const CACHE = `v3.0.4`;
+const CACHE = `v3.0.5`;
 let FALLBACK = "";
 let NOTFOUND = "";
 const OFFLINE_IMG = `<svg role="img" aria-labelledby="offline-title" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
