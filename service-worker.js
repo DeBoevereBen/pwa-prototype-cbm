@@ -1,5 +1,5 @@
 // The name of the cache group.
-const CACHE = `v1.0.0`;
+const CACHE = `v1.0.1`;
 let FALLBACK = "";
 let NOTFOUND = "";
 const OFFLINE_IMG = `<svg role="img" aria-labelledby="offline-title" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
@@ -19,8 +19,7 @@ let filesToCache = [
   `${BASE_PATH}`,
   `${BASE_PATH}index.html`,
   `${BASE_PATH}styles.css`,
-  `${BASE_PATH}idb.js`,
-  `${BASE_PATH}script.js`,
+  `${BASE_PATH}dist/bundle.min.js`,
   `${BASE_PATH}404.html`,
   `${BASE_PATH}offline.html`
 ];
