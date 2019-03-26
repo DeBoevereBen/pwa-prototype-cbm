@@ -1,5 +1,5 @@
 // The name of the cache group.
-const CACHE = `v3.0.5`;
+const CACHE = `v3.0.4`;
 let FALLBACK = "";
 let NOTFOUND = "";
 const OFFLINE_IMG = `<svg role="img" aria-labelledby="offline-title" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
@@ -54,9 +54,9 @@ self.addEventListener("activate", event => {
   event.waitUntil(
     caches
       .keys()
-      .then(function(cacheNames) {
+      .then(function (cacheNames) {
         return Promise.all(
-          cacheNames.map(function(cacheName) {
+          cacheNames.map(function (cacheName) {
             if (cacheName !== CACHE) {
               console.log("[ServiceWorker] Deleting old cache:", cacheName);
               return caches.delete(cacheName);
@@ -64,7 +64,7 @@ self.addEventListener("activate", event => {
           })
         );
       })
-      .then(function() {
+      .then(function () {
         console.log("[ServiceWorker] Claiming clients for version", CACHE);
         return self.clients.claim();
       })
@@ -79,7 +79,7 @@ self.addEventListener("activate", event => {
  * And in the occassion the network fails (no connectivity) we have a
  * fallback (offline.html or index.html without images).
  */
-self.addEventListener("fetch", function(event) {
+self.addEventListener("fetch", function (event) {
   let request = event.request;
   if (request.headers.get("Accept").includes("json")) {
     // skip handling;
@@ -91,11 +91,11 @@ self.addEventListener("fetch", function(event) {
   }
 });
 
-function fromNetwork(request){
+function fromNetwork(request) {
   return fetch(request).then(response => {
     return response;
   }).catch(err => {
-    
+
   })
 }
 
@@ -119,7 +119,7 @@ function fromCache(request) {
         })
         .catch(error => {
           if (request.url.match(/\.(jpe?g|png|gif|svg)$/i)) {
-            return new Response(OFFLINE_IMG, {headers: {'Content-Type': 'image/svg+xml', 'Cache-Control': 'no-cache'}});
+            return new Response(OFFLINE_IMG, { headers: { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'no-cache' } });
           }
           return caches.match(`${BASE_PATH}offline.html`);
         });

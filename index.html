@@ -3,90 +3,71 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
 
-    <!-- Built from https://tomitm.github.io/appmanifest/ -->
-    <link rel="manifest" href="./manifest.json" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="application-name" content="CBM PWA" />
-    <meta name="apple-mobile-web-app-title" content="CBM PWA" />
-    <meta name="theme-color" content="#D3022C" />
-    <meta name="msapplication-navbutton-color" content="#D3022C" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
-    <meta name="msapplication-starturl" content="/" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <link rel="icon" type="image/png" sizes="192x192" href="loading.png" />
-    <link
-      rel="apple-touch-icon"
-      type="image/png"
-      sizes="192x192"
-      href="loading.png"
-    />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-      crossorigin="anonymous"
-    />
-    <!-- End of content built from https://tomitm.github.io/appmanifest/ -->
+<head>
+  <meta charset="utf-8" />
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CBM // Task card index</title>
-    <link rel="stylesheet" type="text/css" href="styles.css" media="all" />
-  </head>
-  <body>
+  <!-- Built from https://tomitm.github.io/appmanifest/ -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="CBM PWA" />
+  <meta name="apple-mobile-web-app-title" content="CBM PWA" />
+  <meta name="theme-color" content="#D3022C" />
+  <meta name="msapplication-navbutton-color" content="#D3022C" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="msapplication-starturl" content="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link rel="icon" type="image/png" sizes="192x192" href="loading.png" />
+  <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="loading.png" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
+  <!-- End of content built from https://tomitm.github.io/appmanifest/ -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CBM // Task card index</title>
+  <link rel="stylesheet" type="text/css" href="styles.css" media="all" />
+</head>
+
+<body>
+  <header>
     <h1>CBM PWA</h1>
 
-    <div style="width: 49%; display: inline-block; vertical-align: top;">
-      <label for="searchInput">Search</label>
-      <input type="text" id="searchInput" />
+    <div id="search">
+      <input type="text" id="searchInput" placeholder="search card" />
+      <select name="filteredCards" id="filteredCards">
+        <option selected disabled>Nothing to see here...</option>
+      </select>
     </div>
 
-    <div style="width: 49%;  display: inline-block;">
-        <select name="filteredCards" id="filteredCards">
-            
-        </select>
+    <div>
+      <label for="topicSelect">Topics</label>
+      <select id="topicSelect"></select>
     </div>
-
-    <br />
-    <hr />
-    <br />
-
-    <div style="width: 49%; display: inline-block; vertical-align: top;">
-      <div>
-        <label for="topicSelect">Topics</label>
-        <select id="topicSelect"></select>
-        <label for="cardSelect">Cards</label>
-        <select id="cardSelect"></select>
-      </div>
-
-      <button id="reload" style="display: none;">
-        Press here for the newest data
-      </button>
-
-      <h2>Favourites</h2>
-      <ul id="favouriteList"></ul>
+    <div>
+      <label for="cardSelect">Cards</label>
+      <select id="cardSelect"></select>
     </div>
-
-    <div style="width: 49%;  display: inline-block;">
-      <div id="taskcard_details"></div>
+    <div id="favo">
+      <label for="favouriteList">Favourites</label>
+      <select name="favouriteList" id="favouriteList">
+        <option selected disabled>Nothing to see here...</option>
+      </select>
     </div>
+  </header>
 
-    <!-- https://github.com/jakearchibald/idb -->
-    <script type="module" src="./idb.js"></script>
-    <!--  -->
-    <script type="module" src="./DOMModule.js"></script>
-    <script type="module" src="./DataModule.js"></script>
-    <script type="module" src="./script.js"></script>
-    <script type="text/javascript" src="./service-worker.js"></script>
-  </body>
+  <div style="width: 49%; display: inline-block; vertical-align: top;">
+    <button id="reload" style="display: none;">
+      Reload for newest data
+    </button>
+  </div>
+
+  <section>
+    <div id="taskcard_details"></div>
+  </section>
+  
+  <script src="./dist/bundle.min.js"></script>
+</body>
+
 </html>
